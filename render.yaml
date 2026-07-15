@@ -2,7 +2,7 @@ services:
   - type: web
     name: tailscale-proxy
     env: docker
-    plan: starter
+    plan: free
     envVars:
       - key: TS_AUTHKEY
         sync: false
