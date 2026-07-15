@@ -1,0 +1,23 @@
+# 本地构建产物
+*.exe
+*.test
+*.out
+status-server
+status-server.exe
+
+# 本地 tailscale 状态
+state/
+*.state
+
+# 环境变量（含密钥，禁止提交）
+.env
+
+# 编辑器 / IDE
+.vscode/
+.idea/
+.trae/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db

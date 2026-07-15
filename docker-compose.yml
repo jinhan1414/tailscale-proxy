@@ -1,0 +1,15 @@
+services:
+  tailscale-proxy:
+    build: .
+    container_name: tailscale-proxy
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    restart: unless-stopped
+    # userspace 模式（镜像内置）无需以下权限；如需关闭 userspace 做本地真 tun 测试可取消注释。
+    # cap_add:
+    #   - NET_ADMIN
+    #   - NET_RAW
+    # devices:
+    #   - /dev/net/tun:/dev/net/tun

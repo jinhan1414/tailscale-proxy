@@ -1,0 +1,6 @@
+.git
+.trae
+.gitignore
+.env
+node_modules
+state
