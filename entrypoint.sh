@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# Built-in exit node config — user only provides TS_AUTHKEY + TS_HOSTNAME.
-export TS_USERSPACE=true
-export TS_STATE_DIR=/tmp/tailscale
-export TS_EXTRA_ARGS="--advertise-exit-node"
-export TS_ACCEPT_DNS=false
+# Built-in exit node config defaults — externally provided values take precedence.
+export TS_USERSPACE="${TS_USERSPACE:-true}"
+export TS_STATE_DIR="${TS_STATE_DIR:-/var/lib/tailscale}"
+export TS_EXTRA_ARGS="${TS_EXTRA_ARGS:---advertise-exit-node}"
+export TS_ACCEPT_DNS="${TS_ACCEPT_DNS:-false}"
 
 mkdir -p "$TS_STATE_DIR" /var/run/tailscale
 

@@ -8,3 +8,15 @@ services:
         sync: false
       - key: TS_HOSTNAME
         sync: false
+      - key: TS_DNS
+        value: "1.1.1.1"
+      - key: TS_EXTRA_ARGS
+        value: "--advertise-exit-node"
+      - key: TS_KUBE_SECRET
+        value: ""
+      - key: TS_NETWORK_LOCK
+        value: "false"
+      - key: TS_STATE_DIR
+        value: "/var/lib/tailscale"
+      - key: TS_USERSPACE
+        value: "true"
