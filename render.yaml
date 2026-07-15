@@ -7,4 +7,4 @@ services:
       - key: TS_AUTHKEY
         sync: false
       - key: TS_HOSTNAME
-        value: render-proxy
+        sync: false
