@@ -63,12 +63,24 @@ r2_remote_path() {
   printf 'r2:%s/%s' "$R2_BUCKET" "$R2_OBJECT_KEY"
 }
 
+state_dir_has_files() {
+  find "$TS_STATE_DIR" -type f -print -quit | grep -q .
+}
+
+downloaded_archive_exists() {
+  [ -f "$R2_STATE_ARCHIVE" ] && [ -s "$R2_STATE_ARCHIVE" ]
+}
+
 restore_tailscale_state() {
   r2_enabled || return 0
   configure_rclone
 
   echo "[entrypoint] Restoring Tailscale state from R2: $(r2_remote_path)"
   if rclone copyto "$(r2_remote_path)" "$R2_STATE_ARCHIVE" 2>/tmp/r2-restore-error.log; then
+    if ! downloaded_archive_exists; then
+      echo "[entrypoint] No local R2 state archive was produced; bootstrapping a new Tailscale state"
+      return 0
+    fi
     if ! tar -xzf "$R2_STATE_ARCHIVE" -C "$TS_STATE_DIR"; then
       echo "[entrypoint] ERROR: restored R2 state archive is invalid" >&2
       exit 1
@@ -110,9 +122,24 @@ wait_for_tailscale_ready() {
   return 1
 }
 
+wait_for_state_files() {
+  elapsed=0
+  while [ "$elapsed" -lt "$R2_STATE_READY_TIMEOUT_SECONDS" ]; do
+    if state_dir_has_files; then
+      return 0
+    fi
+    sleep 2
+    elapsed=$((elapsed + 2))
+  done
+
+  echo "[entrypoint] ERROR: Tailscale state files were not created before backup timeout" >&2
+  return 1
+}
+
 state_backup_loop() {
   r2_enabled || return 0
   wait_for_tailscale_ready || return 1
+  wait_for_state_files || return 1
   backup_tailscale_state || return 1
 
   while true; do
