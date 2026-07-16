@@ -111,14 +111,15 @@ backup_tailscale_state() {
 wait_for_tailscale_ready() {
   elapsed=0
   while [ "$elapsed" -lt "$R2_STATE_READY_TIMEOUT_SECONDS" ]; do
-    if tailscale status >/dev/null 2>&1; then
+    status_json="$(tailscale status --json 2>/dev/null || true)"
+    if printf '%s' "$status_json" | grep -q '"BackendState"[[:space:]]*:[[:space:]]*"Running"'; then
       return 0
     fi
     sleep 2
     elapsed=$((elapsed + 2))
   done
 
-  echo "[entrypoint] ERROR: Tailscale did not become ready before state backup timeout" >&2
+  echo "[entrypoint] ERROR: Tailscale did not reach Running state before backup timeout" >&2
   return 1
 }
 
