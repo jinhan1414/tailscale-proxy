@@ -20,3 +20,17 @@ services:
         value: "/var/lib/tailscale"
       - key: TS_USERSPACE
         value: "true"
+      - key: R2_STATE_ENABLED
+        value: "true"
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: R2_OBJECT_KEY
+        value: "tailscale/render-proxy/state.tar.gz"
+      - key: R2_STATE_BACKUP_INTERVAL_SECONDS
+        value: "300"
